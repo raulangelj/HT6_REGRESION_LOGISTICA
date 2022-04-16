@@ -279,7 +279,7 @@ print(data['Clasificacion'].value_counts())
 
 # %%
 data["CARA"] = np.where(data["cluster"] == 2, 1, 0)
-data["MEDIA"] = np.where(data["cluster"] == 1, 1, 0)
+data["INTERMEDIA"] = np.where(data["cluster"] == 1, 1, 0)
 data["ECONOMICA"] = np.where(data["cluster"] == 0, 1, 0)
 data
 
@@ -322,20 +322,16 @@ logReg.fit(X_train, y_train)
 y_pred = logReg.predict(X_test)
 y_proba = logReg.predict_proba(X)[:, 1]
 cm = confusion_matrix(y_test, y_pred)
-# %%
-accuracy = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred, average='micro')
-recall = recall_score(y_test, y_pred, average='micro')
-f1 = f1_score(y_test, y_pred, average='micro')
-print('Matriz de confusión para regresion lineal\n', cm)
-print('Accuracy: ', accuracy)
 
 # %% [markdown]
 # ## 4. Analice el modelo. Determine si hay multicolinealidad en las variables, y cuáles son las que aportan  al  modelo,  por  su  valor  de  significación.  Haga  un  análisis  de  correlación  de  las variables del modelo y especifique si el modelo se adapta bien a los datos. Explique si hay sobreajuste (overfitting) o no.
 
+# ###R/ Analizando las tablas de VIF y Tolerancia, se logra determinar que las variables de caras, intermedias y economicas si estan relacionadas con las variables de precio, lot area, overallqual y total rooms above ground, de igual forma con nuestra tabla de relacion logramos ver que estas variables si tienen relacion. Ahora analizando nuestros datos de accuracy y precision, 0.98 y 0.97 respectivamente, logramos determinar que si existe un overfitting, el modelo no es capaz de ajustar bien los datos.
+
 # %%
-hm = sns.heatmap(data.corr(), annot=True, mask=np.triu(
-    np.ones_like(data.corr(), dtype=bool)), vmin=-1, vmax=1)
+# hm = sns.heatmap(data.corr(), annot=True, mask=np.triu(
+#     np.ones_like(data.corr(), dtype=bool)), vmin=-1, vmax=1)
+hm = sns.heatmap(data.corr(), annot=True, vmin=-1, vmax=1)
 plt.show()
 
 # %%
@@ -361,5 +357,23 @@ def calculate_vif(df, features):
 
 
 # %%
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='micro')
+recall = recall_score(y_test, y_pred, average='micro')
+f1 = f1_score(y_test, y_pred, average='micro')
+print('Matriz de confusión para regresion lineal\n', cm)
+print('Accuracy: ', accuracy)
+print("Precision:", metrics.precision_score(
+    y_test, y_pred, average='weighted'))
+
+# %%
 calculate_vif(df=data, features=['SalePrice',
-              'GrLivArea', 'LotArea', 'OverallQual'])
+              'GrLivArea', 'LotArea', 'OverallQual', 'TotRmsAbvGrd', 'CARA'])
+# %%
+calculate_vif(df=data, features=['SalePrice',
+              'GrLivArea', 'LotArea', 'OverallQual', 'TotRmsAbvGrd', 'INTERMEDIA'])
+# %%
+calculate_vif(df=data, features=['SalePrice',
+              'GrLivArea', 'LotArea', 'OverallQual', 'TotRmsAbvGrd', 'ECONOMICA'])
+
+# %%
