@@ -293,8 +293,9 @@ data
 # # Estableciendo los conjuntos de Entrenamiento y Prueba
 
 # %%
-y = data['Clasificacion']
-X = data[['SalePrice', 'LotArea', 'TotalBsmtSF',
+cara = data.pop('CARA')
+y = cara
+X = data[['LotArea', 'TotalBsmtSF',
           'GrLivArea', 'TotRmsAbvGrd', 'OverallQual']]
 
 # %%
@@ -365,6 +366,9 @@ print('Matriz de confusión para regresion lineal\n', cm)
 print('Accuracy: ', accuracy)
 print("Precision:", metrics.precision_score(
     y_test, y_pred, average='weighted'))
+print("Recall:", recall)
+print("F1:", f1)
+
 
 # %%
 calculate_vif(df=data, features=['SalePrice',
