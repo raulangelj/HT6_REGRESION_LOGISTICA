@@ -326,7 +326,7 @@ cm = confusion_matrix(y_test, y_pred)
 # %% [markdown]
 # ## 4. Analice el modelo. Determine si hay multicolinealidad en las variables, y cuáles son las que aportan  al  modelo,  por  su  valor  de  significación.  Haga  un  análisis  de  correlación  de  las variables del modelo y especifique si el modelo se adapta bien a los datos. Explique si hay sobreajuste (overfitting) o no.
 
-# ###R/ Analizando las tablas de VIF y Tolerancia, se logra determinar que las variables de caras, intermedias y economicas si estan relacionadas con las variables de precio, lot area, overallqual y total rooms above ground, de igual forma con nuestra tabla de relacion logramos ver que estas variables si tienen relacion. Ahora analizando nuestros datos de accuracy y precision, 0.98 y 0.97 respectivamente, logramos determinar que si existe un overfitting, el modelo no es capaz de ajustar bien los datos.
+# ### R/ Analizando las tablas de VIF y Tolerancia, se logra determinar que las variables de caras, intermedias y economicas si estan relacionadas con las variables de precio, lot area, overallqual y total rooms above ground, de igual forma con nuestro heatmap de relacion logramos ver que estas variables si tienen relacion. Ahora analizando nuestros datos de accuracy y precision, 0.98 y 0.97 respectivamente, logramos determinar que si existe un overfitting, el modelo no es capaz de ajustar bien los datos.
 
 # %%
 # hm = sns.heatmap(data.corr(), annot=True, mask=np.triu(
