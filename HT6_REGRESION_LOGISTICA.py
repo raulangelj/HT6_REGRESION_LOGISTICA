@@ -281,6 +281,7 @@ print(data['Clasificacion'].value_counts())
 data["CARA"] = np.where(data["cluster"] == 2, 1, 0)
 data["INTERMEDIA"] = np.where(data["cluster"] == 1, 1, 0)
 data["ECONOMICA"] = np.where(data["cluster"] == 0, 1, 0)
+dataOG = data.copy()
 data
 
 # %% [markdown]
@@ -294,23 +295,49 @@ data
 
 # %%
 cara = data.pop('CARA')
+intermedia = data.pop('INTERMEDIA')
+economica = data.pop('ECONOMICA')
+print('para variable CARA')
 y = cara
 X = data[['LotArea', 'TotalBsmtSF',
           'GrLivArea', 'TotRmsAbvGrd', 'OverallQual']]
 
-# %%
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.3, train_size=0.7)
 y_train
 
-# %% [markdown]
 # 70% de entrenamiento y 30% prueba
 
-# %%
-X_train.info()
+print(X_train.info())
+print(X_test.info())
 
-# %%
-X_test.info()
+print('para variable intermedia')
+yi = intermedia
+Xi = data[['LotArea', 'TotalBsmtSF',
+          'GrLivArea', 'TotRmsAbvGrd', 'OverallQual']]
+
+X_train_i, X_test_i, y_train_i, y_test_i = train_test_split(
+    Xi, yi, test_size=0.3, train_size=0.7)
+y_train_i
+
+# 70% de entrenamiento y 30% prueba
+
+print(X_train_i.info())
+print(X_test_i.info())
+
+print('para variable economica')
+ye = intermedia
+Xe = data[['LotArea', 'TotalBsmtSF',
+          'GrLivArea', 'TotRmsAbvGrd', 'OverallQual']]
+
+X_train_e, X_test_e, y_train_e, y_test_e = train_test_split(
+    Xe, ye, test_size=0.3, train_size=0.7)
+y_train_e
+
+# 70% de entrenamiento y 30% prueba
+
+print(X_train_e.info())
+print(X_test_e.info())
 
 # %% [markdown]
 # ## 3. Elabore  un  modelo  de  regresión  logística  para  conocer  si  una  vivienda  es  cara  o  no, utilizando el conjunto de entrenamiento y explique los resultados a los que llega. Muestre el modelo gráficamente. El experimento debe ser reproducible por lo que debe fijar que los conjuntos de entrenamiento y prueba sean los mismos siempre que se ejecute el código.
@@ -318,11 +345,26 @@ X_test.info()
 # ### R/Analizando los datos que se obtuvieron se puede determinar que la eficiencia del algoritmo de regresion logistica es bastante bueno, se puede llegar a esta conclucion debido a que la matriz de confucion es de 97.4%. Lo cual se puede observar en la matriz que se imprime a acontinuacion.
 
 # %%
+# Variable CARA
 logReg = LogisticRegression(solver='liblinear')
 logReg.fit(X_train, y_train)
 y_pred = logReg.predict(X_test)
 y_proba = logReg.predict_proba(X)[:, 1]
 cm = confusion_matrix(y_test, y_pred)
+
+# variable INTERMEDIA
+logReg_i = LogisticRegression(solver='liblinear')
+logReg_i.fit(X_train_i, y_train_i)
+y_pred_i = logReg_i.predict(X_test_i)
+y_proba_i = logReg_i.predict_proba(Xi)[:, 1]
+cm_i = confusion_matrix(y_test_i, y_pred_i)
+
+# variable ECONOMICA
+logReg_e = LogisticRegression(solver='liblinear')
+logReg_e.fit(X_train_e, y_train_e)
+y_pred_e = logReg_e.predict(X_test_e)
+y_proba_e = logReg_e.predict_proba(Xe)[:, 1]
+cm_e = confusion_matrix(y_test_e, y_pred_e)
 
 # %% [markdown]
 # ## 4. Analice el modelo. Determine si hay multicolinealidad en las variables, y cuáles son las que aportan  al  modelo,  por  su  valor  de  significación.  Haga  un  análisis  de  correlación  de  las variables del modelo y especifique si el modelo se adapta bien a los datos. Explique si hay sobreajuste (overfitting) o no.
@@ -332,6 +374,7 @@ cm = confusion_matrix(y_test, y_pred)
 # %%
 # hm = sns.heatmap(data.corr(), annot=True, mask=np.triu(
 #     np.ones_like(data.corr(), dtype=bool)), vmin=-1, vmax=1)
+data.pop('cluster')
 hm = sns.heatmap(data.corr(), annot=True, vmin=-1, vmax=1)
 plt.show()
 
@@ -358,6 +401,7 @@ def calculate_vif(df, features):
 
 
 # %%
+print('\nDATOS DE CARA')
 accuracy = accuracy_score(y_test, y_pred)
 precision = precision_score(y_test, y_pred, average='micro')
 recall = recall_score(y_test, y_pred, average='micro')
@@ -369,15 +413,39 @@ print("Precision:", metrics.precision_score(
 print("Recall:", recall)
 print("F1:", f1)
 
+print('\nDATOS DE INTERMEDIA')
+accuracy_i = accuracy_score(y_test_i, y_pred_i)
+precision_i = precision_score(y_test_i, y_pred_i, average='micro')
+recall_i = recall_score(y_test_i, y_pred_i, average='micro')
+f1_i = f1_score(y_test_i, y_pred_i, average='micro')
+print('Matriz de confusión para regresion lineal\n', cm_i)
+print('Accuracy: ', accuracy_i)
+print("Precision:", metrics.precision_score(
+    y_test_i, y_pred_i, average='weighted'))
+print("Recall:", recall_i)
+print("F1:", f1_i)
+
+print('\nDATOS DE ECONOMICA')
+accuracy_e = accuracy_score(y_test_e, y_pred_e)
+precision_e = precision_score(y_test_e, y_pred_e, average='micro')
+recall_e = recall_score(y_test_e, y_pred_e, average='micro')
+f1_e = f1_score(y_test_e, y_pred_e, average='micro')
+print('Matriz de confusión para regresion lineal\n', cm_e)
+print('Accuracy: ', accuracy_e)
+print("Precision:", metrics.precision_score(
+    y_test_e, y_pred_e, average='weighted'))
+print("Recall:", recall_e)
+print("F1:", f1_e)
+
 
 # %%
-calculate_vif(df=data, features=['SalePrice',
+calculate_vif(df=dataOG, features=['SalePrice',
               'GrLivArea', 'LotArea', 'OverallQual', 'TotRmsAbvGrd', 'CARA'])
 # %%
-calculate_vif(df=data, features=['SalePrice',
+calculate_vif(df=dataOG, features=['SalePrice',
               'GrLivArea', 'LotArea', 'OverallQual', 'TotRmsAbvGrd', 'INTERMEDIA'])
 # %%
-calculate_vif(df=data, features=['SalePrice',
+calculate_vif(df=dataOG, features=['SalePrice',
               'GrLivArea', 'LotArea', 'OverallQual', 'TotRmsAbvGrd', 'ECONOMICA'])
 
 # %%
