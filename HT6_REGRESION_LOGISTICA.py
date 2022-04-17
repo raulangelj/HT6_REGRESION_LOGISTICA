@@ -374,8 +374,9 @@ cm_e = confusion_matrix(y_test_e, y_pred_e)
 # %%
 # hm = sns.heatmap(data.corr(), annot=True, mask=np.triu(
 #     np.ones_like(data.corr(), dtype=bool)), vmin=-1, vmax=1)
-data.pop('cluster')
-hm = sns.heatmap(data.corr(), annot=True, vmin=-1, vmax=1)
+heatmapmatriz = data.copy()
+hm = sns.heatmap(heatmapmatriz[['LotArea', 'TotalBsmtSF',
+                                'GrLivArea', 'TotRmsAbvGrd', 'OverallQual']].corr(), annot=True, vmin=-1, vmax=1)
 plt.show()
 
 # %%
