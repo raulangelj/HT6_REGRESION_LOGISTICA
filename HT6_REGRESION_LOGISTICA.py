@@ -369,8 +369,7 @@ cm_e = confusion_matrix(y_test_e, y_pred_e)
 # %% [markdown]
 # ## 4. Analice el modelo. Determine si hay multicolinealidad en las variables, y cuáles son las que aportan  al  modelo,  por  su  valor  de  significación.  Haga  un  análisis  de  correlación  de  las variables del modelo y especifique si el modelo se adapta bien a los datos. Explique si hay sobreajuste (overfitting) o no.
 
-# ### R/ Analizando las tablas de VIF y Tolerancia, se logra determinar que las variables de caras, intermedias y economicas si estan relacionadas con las variables de precio, lot area, overallqual y total rooms above ground, de igual forma con nuestro heatmap de relacion logramos ver que estas variables si tienen relacion. Ahora analizando nuestros datos de accuracy y precision, 0.98 y 0.97 respectivamente, logramos determinar que si existe un overfitting, el modelo no es capaz de ajustar bien los datos.
-
+# ### R/ Analizando las tablas de VIF y Tolerancia, se logra determinar que las variables de caras, intermedias y economicas si estan relacionadas con las variables de precio, lot area, overallqual y total rooms above ground, de igual forma con nuestro heatmap de relacion logramos ver que estas variables si tienen relacion. Ahora analizando nuestros datos de accuracy y precision, se obtuvieron los siguientes valores 0.96 de accuracy y de precision para las casas caras, 0.88 de accuracy y 0.88 de precision para las casas intermedias y 0.89 de accuracy y 0.89 de precision para las economicas. Por lo tanto si hay overfitting, ya que los valores obtenidos en accuracy y precision son cercanos a 1
 # %%
 # hm = sns.heatmap(data.corr(), annot=True, mask=np.triu(
 #     np.ones_like(data.corr(), dtype=bool)), vmin=-1, vmax=1)
@@ -449,4 +448,55 @@ calculate_vif(df=dataOG, features=['SalePrice',
 calculate_vif(df=dataOG, features=['SalePrice',
               'GrLivArea', 'LotArea', 'OverallQual', 'TotRmsAbvGrd', 'ECONOMICA'])
 
+# %% 
+# ## 5. Utilice  el  modelo  con  el  conjunto  de  prueba  y  determine  la  eficiencia  del  algoritmo  para clasificar o predecir, en dependencia de las características de la variable respuesta. 
+print('\nDATOS DE CARA')
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='micro')
+print('Accuracy: ', accuracy)
+print("Precision:", metrics.precision_score(
+    y_test, y_pred, average='weighted'))
+
+print('\nDATOS DE INTERMEDIA')
+accuracy_i = accuracy_score(y_test_i, y_pred_i)
+precision_i = precision_score(y_test_i, y_pred_i, average='micro')
+print('Accuracy: ', accuracy_i)
+print("Precision:", metrics.precision_score(
+    y_test_i, y_pred_i, average='weighted'))
+
+print('\nDATOS DE ECONOMICA')
+accuracy_e = accuracy_score(y_test_e, y_pred_e)
+precision_e = precision_score(y_test_e, y_pred_e, average='micro')
+print('Accuracy: ', accuracy_e)
+print("Precision:", metrics.precision_score(
+    y_test_e, y_pred_e, average='weighted'))
+
+print('\nR// Despues de calcular la exactitud y la precision de los modelos de las casas caras, intermedias y economicas, podemos determinar que la eficiencia del algoritmo es alta, se obtuvieron valores muy cercanos a 1, mostrando que los modelos de conjunto de prueba tienen un alto nivel de eficiencia.')
+
+# %% 
+# ## 6. Haga  un  análisis  de  la  eficiencia  del  algoritmo  usando  una  matriz  de  confusión.  Tenga  en cuenta la efectividad, donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores.
+
+# %%
+# ## 7. Cree otros dos modelos que determinen si una casa es barata o no, o intrmedia o no. Repita para cada modelo, los pasos del 1- 6.
+print('En los puntos anteriores, se realizaron todas las pruebas para los 3 modelos: barata, intermedia o cara')
+
+# %%
+# ## 8. Compare la eficiencia de los 3 modelos que creó (uno para barata, otro para media y otro para  cara)  ¿Cuál  se  demoró  más  en  procesar?¿Cuál  se  equivocó  más?¿Cuál  se  equivocó menos?¿por qué?
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='micro')
+accuracy_i = accuracy_score(y_test_i, y_pred_i)
+precision_i = precision_score(y_test_i, y_pred_i, average='micro')
+accuracy_e = accuracy_score(y_test_e, y_pred_e)
+precision_e = precision_score(y_test_e, y_pred_e, average='micro')
+print('Comparando la eficiencia entre los tres modelos, el que se deboro mas en procesar fue')
+print('=====================================================================================')
+print('||           || Modelo Caro          || Modelo Intermedio          || Modelo Economico ||')
+print('=====================================================================================')
+print('|| Exactitud || ', accuracy, ' || ', accuracy_i, ' || ', accuracy_e, ' ||')
+print('=====================================================================================')
+print('|| Precision || ', precision, ' || ', precision_i, ' || ', precision_e, ' ||')
+print('=====================================================================================')
+
+print('\nRespondiendo la pregunta de cual fue el modelo que tardo mas en procesar, se determino que tardan lo mismo, debido a que el tamaño de los conjuntos de prueba es el mismo, ademas de que los tiempos obtenidos en la ejecucion de cada modelo es el mismo.')
+print('\nEl que se equivoco mas fue el modelo intermedio, ya que obtuvo un accuracy y precision de 0.88 y el que menos se equivoco fue el modelo Caro, porque el accuracy y la precision obtenidos se acercan mas a 1, siendo 0.96')
 # %%
