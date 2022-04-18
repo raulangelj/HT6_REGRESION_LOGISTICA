@@ -20,7 +20,7 @@ from sklearn.linear_model import LinearRegression
 import sklearn.preprocessing
 import scipy.cluster.hierarchy as sch
 import seaborn as sns
-import skfuzzy as fuzz
+# import skfuzzy as fuzz
 from sklearn.metrics import confusion_matrix
 import pylab
 import sklearn.mixture as mixture
@@ -36,7 +36,7 @@ from sklearn import datasets
 from scipy import stats
 from statsmodels.graphics.gofplots import qqplot
 from sklearn.metrics import confusion_matrix as Confusion_Matrix
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score, train_test_split, StratifiedKFold, RepeatedKFold, cross_validate, cross_val_score
 
 # %matplotlib inline
 from mpl_toolkits.mplot3d import Axes3D
@@ -475,6 +475,15 @@ print('\nR// Despues de calcular la exactitud y la precision de los modelos de l
 
 # %% 
 # ## 6. Haga  un  análisis  de  la  eficiencia  del  algoritmo  usando  una  matriz  de  confusión.  Tenga  en cuenta la efectividad, donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores.
+
+# evaluate on the train dataset
+cross_validate(logReg, X_train, y_train, return_train_score=True)
+cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
+# evaluar modelo
+scores = cross_val_score(logReg, X_train, y_train, scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1)
+scores = np.absolute(scores)
+print(f'Mean MAE: {np.mean(scores)} ({np.std(scores)})')
+print(f'Este algoritmo tuvo una media de score de {np.mean(scores)} con ({np.std(scores)}) lo cual lo hace un algoritmo con error leve lo cual se pudo haber dado a datos atípicos en la data.')
 
 # %%
 # ## 7. Cree otros dos modelos que determinen si una casa es barata o no, o intrmedia o no. Repita para cada modelo, los pasos del 1- 6.
