@@ -20,7 +20,7 @@ from sklearn.linear_model import LinearRegression
 import sklearn.preprocessing
 import scipy.cluster.hierarchy as sch
 import seaborn as sns
-# import skfuzzy as fuzz
+import skfuzzy as fuzz
 from sklearn.metrics import confusion_matrix
 import pylab
 import sklearn.mixture as mixture
