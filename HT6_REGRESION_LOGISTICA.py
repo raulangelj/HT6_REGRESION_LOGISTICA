@@ -20,7 +20,7 @@ from sklearn.linear_model import LinearRegression
 import sklearn.preprocessing
 import scipy.cluster.hierarchy as sch
 import seaborn as sns
-import skfuzzy as fuzz
+# import skfuzzy as fuzz
 from sklearn.metrics import confusion_matrix
 import pylab
 import sklearn.mixture as mixture
@@ -476,13 +476,32 @@ print('\nR// Despues de calcular la exactitud y la precision de los modelos de l
 # %% 
 # ## 6. Haga  un  análisis  de  la  eficiencia  del  algoritmo  usando  una  matriz  de  confusión.  Tenga  en cuenta la efectividad, donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores.
 
+# Variable CARA
 # evaluate on the train dataset
 cross_validate(logReg, X_train, y_train, return_train_score=True)
 cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
 # evaluar modelo
 scores = cross_val_score(logReg, X_train, y_train, scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1)
 scores = np.absolute(scores)
-print(f'Mean MAE: {np.mean(scores)} ({np.std(scores)})')
+print(f'Mean MAE(cara): {np.mean(scores)} ({np.std(scores)})')
+
+# variable INTERMEDIA
+# evaluate on the train dataset
+cross_validate(logReg, X_train_i, y_train_i, return_train_score=True)
+cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
+# evaluar modelo
+scores = cross_val_score(logReg, X_train_i, y_train_i, scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1)
+scores = np.absolute(scores)
+print(f'Mean MAE(intermedia): {np.mean(scores)} ({np.std(scores)})')
+
+# variable ECONOMICA
+# evaluate on the train dataset
+cross_validate(logReg, X_train_e, y_train_e, return_train_score=True)
+cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
+# evaluar modelo
+scores = cross_val_score(logReg, X_train_e, y_train_e, scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1)
+scores = np.absolute(scores)
+print(f'Mean MAE(económica): {np.mean(scores)} ({np.std(scores)})')
 print(f'Este algoritmo tuvo una media de score de {np.mean(scores)} con ({np.std(scores)}) lo cual lo hace un algoritmo con error leve lo cual se pudo haber dado a datos atípicos en la data.')
 
 # %%
